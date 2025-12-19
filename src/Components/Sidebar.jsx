@@ -53,7 +53,7 @@ function Sidebar() {
       </aside>
 
       {/* MOBILE BOTTOM BAR */}
-      <aside className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1c1c2e] border-t border-[#1c1f2c] z-[9999]">
+      <aside className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1c1c2e] border-t border-[#1c1f2c] z-9999">
         <nav className="flex items-center justify-between px-4 py-3">
           {logosArray.map((item, index) => (
             <button
