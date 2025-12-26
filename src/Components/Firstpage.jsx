@@ -22,7 +22,6 @@ function Firstpage() {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("1");
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
-
   const [orders, setOrders] = useState([]);
   const [orderType, setOrderType] = useState("Dine In");
   const [openType, setOpenType] = useState(false);
@@ -71,7 +70,6 @@ function Firstpage() {
 
     return matchSearch && matchTab;
   });
-
 
   // Check if item+size already in cart
   const isInCart = (id, s) => {
@@ -306,4 +304,3 @@ function Firstpage() {
 }
 
 export default Firstpage;
-

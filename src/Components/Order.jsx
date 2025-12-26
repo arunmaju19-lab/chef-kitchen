@@ -44,8 +44,8 @@ function Order({ orders, setOrders }) {
               key={type}
               onClick={() => setActiveType(type)}
               className={`px-4 py-1 rounded-lg text-sm transition-all ${activeType === type
-                  ? "bg-orange-500 text-white"
-                  : "border border-[#393C49] text-orange-400 hover:bg-[#2a2f42] "
+                ? "bg-orange-500 text-white"
+                : "border border-[#393C49] text-orange-400 hover:bg-[#2a2f42] "
                 }`}
             >
               {type}
