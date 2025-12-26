@@ -52,8 +52,8 @@ function Sidebar() {
         </button>
       </aside>
 
-      {/* MOBILE BOTTOM BAR */}
-<aside className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1c1c2e] border-t border-[#1c1f2c] z-[9999]">
+    {/* MOBILE BOTTOM BAR */}
+<aside className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1c1c2e] border-t border-[#1c1f2c] z-9999">
   <nav className="flex items-center justify-between px-4 py-3">
     {logosArray.map((item, index) => (
       <button
@@ -61,7 +61,7 @@ function Sidebar() {
         onClick={() => setActive(index)}
         className="relative w-12 h-12 flex items-center justify-center"
       >
-        {/* ACTIVE BACKGROUND */}
+        {/* ORANGE BACKGROUND */}
         <div
           className={`
             absolute inset-0 rounded-xl transition-all duration-300
@@ -75,12 +75,19 @@ function Sidebar() {
         {/* ICON */}
         <img
           src={item.src}
-          className="relative z-10 w-6 h-6 block object-contain transition-transform duration-300"
+          className={`
+            relative z-10 w-6 h-6 object-contain transition-all duration-300
+            ${active === index
+              ? "filter brightness-0 invert"
+              : "opacity-80"
+            }
+          `}
         />
       </button>
     ))}
   </nav>
 </aside>
+
 
     </>
   );
