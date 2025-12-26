@@ -15,7 +15,7 @@ import beef from "../assets/foods/beef.svg";
 
 function Firstpage() {
   const [size, setSize] = useState({
-    1: "L", 2: "L", 3: "L", 4: "M", 5: "L",
+    1: "L", 2: "L", 3: "L", 4: "L", 5: "L",
     6: "L", 7: "L", 8: "L", 9: "L",
   });
 
@@ -89,7 +89,12 @@ function Firstpage() {
       <div className="flex-1 flex flex-col">
 
         {/* HEADER */}
-        <div className="p-2">
+        <div className="
+  p-2
+  sticky top-0 z-20
+  bg-[#1b2032]
+  md:static
+">
           <div className="flex flex-col gap-4 mb-6 md:flex-row md:justify-between">
             <div>
               <h1 className="text-2xl font-bold ">
@@ -205,11 +210,9 @@ function Firstpage() {
         </div>
 
         {/* DISH LIST */}
-        <div className="flex-1 overflow-y-auto px-2 pb-14 hide-scrollbar  bg-[#1b2032]">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-18 pt-24  bg-[#1b2032]">
-
-
-            {filteredImages.length > 0 ? (
+<div className="flex-1 overflow-y-auto px-2 pb-14 hide-scrollbar bg-[#1b2032]">     
+       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-18 pt-24  bg-[#1b2032]">
+     {filteredImages.length > 0 ? (
               filteredImages.map((item) => (
                 <div
                   key={item.id}
@@ -257,7 +260,7 @@ function Firstpage() {
 
                   {/* ADD BUTTON */}
                   <button
-                    className={`px-7 py-2 rounded-xl transition
+                    className={`px-4 py-2 rounded-xl transition
                       ${isInCart(item.id, size[item.id])
                         ? "bg-red-500 cursor-not-allowed"
                         : "bg-orange-500 hover:bg-orange-600 cursor-pointer"
