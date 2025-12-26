@@ -53,22 +53,35 @@ function Sidebar() {
       </aside>
 
       {/* MOBILE BOTTOM BAR */}
-      <aside className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1c1c2e] border-t border-[#1c1f2c] z-9999">
-        <nav className="flex items-center justify-between px-4 py-3">
-          {logosArray.map((item, index) => (
-            <button
-              key={item.id}
-              onClick={() => setActive(index)}
-              className="w-12 h-12 flex items-center justify-center rounded-xl"
-            >
-              <img
-                src={item.src}
-                className="w-6 h-6 block object-contain"
-              />
-            </button>
-          ))}
-        </nav>
-      </aside>
+<aside className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1c1c2e] border-t border-[#1c1f2c] z-[9999]">
+  <nav className="flex items-center justify-between px-4 py-3">
+    {logosArray.map((item, index) => (
+      <button
+        key={item.id}
+        onClick={() => setActive(index)}
+        className="relative w-12 h-12 flex items-center justify-center"
+      >
+        {/* ACTIVE BACKGROUND */}
+        <div
+          className={`
+            absolute inset-0 rounded-xl transition-all duration-300
+            ${active === index
+              ? "bg-orange-500 scale-110 shadow-[0_8px_25px_rgba(255,140,60,0.45)]"
+              : "bg-transparent scale-100"
+            }
+          `}
+        />
+
+        {/* ICON */}
+        <img
+          src={item.src}
+          className="relative z-10 w-6 h-6 block object-contain transition-transform duration-300"
+        />
+      </button>
+    ))}
+  </nav>
+</aside>
+
     </>
   );
 }
