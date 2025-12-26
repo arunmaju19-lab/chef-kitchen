@@ -89,7 +89,8 @@ function Firstpage() {
       <div className="flex-1 flex flex-col">
 
         {/* HEADER */}
-        <div className="p-2">
+<div className="p-2 sticky top-0 z-20 bg-[#1b2032]">
+
           <div className="flex flex-col gap-4 mb-6 md:flex-row md:justify-between">
             <div>
               <h1 className="text-2xl font-bold ">
@@ -205,7 +206,14 @@ function Firstpage() {
         </div>
 
         {/* DISH LIST */}
-        <div className="flex-1 overflow-y-auto px-2 pb-14 hide-scrollbar  bg-[#1b2032]">
+        <div
+  className="
+    overflow-y-auto px-2 pb-14 hide-scrollbar bg-[#1b2032]
+    h-[calc(100vh-260px)]
+    md:flex-1 md:h-auto
+  "
+>
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-18 pt-24  bg-[#1b2032]">
 
 
