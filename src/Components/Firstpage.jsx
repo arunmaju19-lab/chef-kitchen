@@ -67,12 +67,12 @@ function Firstpage() {
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  //  Check if item+size already in cart
+  // ✅ Check if item+size already in cart
   const isInCart = (id, s) => {
     return orders.some(o => o.id === id && o.size === s);
   };
 
-  // Add to cart only if same size not present
+  // ✅ Add to cart only if same size not present
   const addToOrder = (newItem) => {
     if (!isInCart(newItem.id, newItem.size)) {
       setOrders([...orders, newItem]);
@@ -89,7 +89,7 @@ function Firstpage() {
       <div className="flex-1 flex flex-col">
 
         {/* HEADER */}
-        <div className="p-2 sticky top-0 z-20 bg-[#1b2032] md:static">
+        <div className="p-2">
           <div className="flex flex-col gap-4 mb-6 md:flex-row md:justify-between">
             <div>
               <h1 className="text-2xl font-bold ">
@@ -127,7 +127,8 @@ function Firstpage() {
                 <FaShoppingCart className="text-base leading-none" />
 
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-xs
+      w-4 h-4 rounded-full flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}
@@ -137,8 +138,10 @@ function Firstpage() {
           </div>
 
           {/* TABS */}
-          <div className="flex gap-8  mb-6 border-b border-[#2a2f42]overflow-x-auto whitespace-nowrap hide-scrollbar">
-  {tabs.map((tab) => (
+          <div className="flex gap-8  mb-6 border-b border-[#2a2f42]
+  overflow-x-auto whitespace-nowrap hide-scrollbar">
+
+            {tabs.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
@@ -151,13 +154,16 @@ function Firstpage() {
                   }`}
               >
                 {tab.label}
+
                 {activeTab === tab.id && (
                   <span className="absolute left-0 -bottom-px w-full h-0.5 bg-orange-500 transition-all" />
                 )}
               </button>
             ))}
           </div>
-    {/* DINE IN / TAKE AWAY / DELIVERY */}
+
+
+          {/* DINE IN / TAKE AWAY / DELIVERY */}
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold">Choose Dishes</h2>
 
@@ -199,9 +205,11 @@ function Firstpage() {
         </div>
 
         {/* DISH LIST */}
-<div className="flex-1 overflow-y-auto px-2 pb-14 hide-scrollbar bg-[#1b2032]">     
-       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-18 pt-24  bg-[#1b2032]">
-     {filteredImages.length > 0 ? (
+        <div className="flex-1 overflow-y-auto px-2 pb-14 hide-scrollbar  bg-[#1b2032]">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-18 pt-24  bg-[#1b2032]">
+
+
+            {filteredImages.length > 0 ? (
               filteredImages.map((item) => (
                 <div
                   key={item.id}
