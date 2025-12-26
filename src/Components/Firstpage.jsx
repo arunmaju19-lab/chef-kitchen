@@ -63,9 +63,18 @@ function Firstpage() {
     { id: 9, name: "Beef dumpling in hot and sour soup", img: beef, price: 35, available: 5 },
   ];
 
-  const filteredImages = images.filter((item) =>
+  const filteredImages = images.filter((item) => {
+  // Today Special → show all
+  if (activeTab === "1") {
+    return item.name.toLowerCase().includes(search.toLowerCase());
+  }
+
+  // Other tabs → category match + search
+  return (
+    item.category === activeTab &&
     item.name.toLowerCase().includes(search.toLowerCase())
   );
+});
 
   //  Check if item+size already in cart
   const isInCart = (id, s) => {
