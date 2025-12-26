@@ -63,18 +63,9 @@ function Firstpage() {
     { id: 9, name: "Beef dumpling in hot and sour soup", img: beef, price: 35, available: 5 },
   ];
 
-  const filteredImages = images.filter((item) => {
-  // Today Special → show all
-  if (activeTab === "1") {
-    return item.name.toLowerCase().includes(search.toLowerCase());
-  }
-
-  // Other tabs → category match + search
-  return (
-    item.category === activeTab &&
+  const filteredImages = images.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
-});
 
   //  Check if item+size already in cart
   const isInCart = (id, s) => {
@@ -147,7 +138,7 @@ function Firstpage() {
 
           {/* TABS */}
           <div className="flex gap-8  mb-6 border-b border-[#2a2f42]overflow-x-auto whitespace-nowrap hide-scrollbar">
-            {tabs.map((tab) => (
+  {tabs.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
@@ -166,7 +157,7 @@ function Firstpage() {
               </button>
             ))}
           </div>
-          {/* DINE IN / TAKE AWAY / DELIVERY */}
+    {/* DINE IN / TAKE AWAY / DELIVERY */}
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold">Choose Dishes</h2>
 
@@ -208,9 +199,9 @@ function Firstpage() {
         </div>
 
         {/* DISH LIST */}
-        <div className="flex-1 overflow-y-auto px-2 pb-14 hide-scrollbar bg-[#1b2032]">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-18 pt-24  bg-[#1b2032]">
-            {filteredImages.length > 0 ? (
+<div className="flex-1 overflow-y-auto px-2 pb-14 hide-scrollbar bg-[#1b2032]">     
+       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-18 pt-24  bg-[#1b2032]">
+     {filteredImages.length > 0 ? (
               filteredImages.map((item) => (
                 <div
                   key={item.id}
