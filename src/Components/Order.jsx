@@ -21,18 +21,15 @@ function Order({ orders, setOrders }) {
     setOrders(orders.filter((item) => !(item.id === id && item.size === size)));
   };
 
-  /* ===== PRICE CALCULATION ===== */
-  const subTotal = orders.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
+  /* ===== PRICE ===== */
+  const subTotal = orders.reduce((sum, item) => sum + item.price * item.qty, 0);
   const discountAmount = subTotal * discountRate;
   const finalTotal = subTotal - discountAmount;
 
   const types = ["Dine In", "Take Away", "Delivery"];
 
   return (
-    <div className="relative w-full h-screen bg-[#1F1D2B] text-white flex flex-col rounded-l-2xl">
+    <div className="relative w-full h-screen bg-[#1F1D2B] text-white flex flex-col rounded-l-2xl overflow-hidden">
 
       {/* ===== MOBILE DRAG HANDLE ===== */}
       <div className="md:hidden w-full flex justify-center py-2 shrink-0">
@@ -48,12 +45,11 @@ function Order({ orders, setOrders }) {
             <button
               key={type}
               onClick={() => setActiveType(type)}
-              className={`px-4 py-1 rounded-lg text-sm transition-all
-                ${
-                  activeType === type
-                    ? "bg-orange-500 text-white"
-                    : "border border-[#393C49] text-orange-400 hover:bg-[#2a2f42]"
-                }`}
+              className={`px-4 py-1 rounded-lg text-sm transition-all ${
+                activeType === type
+                  ? "bg-orange-500 text-white"
+                  : "border border-[#393C49] text-orange-400 hover:bg-[#2a2f42]"
+              }`}
             >
               {type}
             </button>
@@ -68,8 +64,8 @@ function Order({ orders, setOrders }) {
         <span className="w-1/4 text-right font-bold">Price</span>
       </div>
 
-      {/* ===== ORDERS LIST (SCROLLABLE) ===== */}
-      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5 pb-60">
+      {/* ===== SCROLL AREA (ITEMS ONLY) ===== */}
+      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5 pb-[260px] hide-scrollbar">
         {orders.map((item) => (
           <div key={`${item.id}-${item.size}`} className="space-y-2">
             <div className="flex items-center justify-between">
@@ -82,7 +78,7 @@ function Order({ orders, setOrders }) {
                   className="w-10 h-10 rounded-full shrink-0"
                 />
                 <div className="min-w-0">
-                  <p className="text-sm wrap-break-word">{item.name}</p>
+                  <p className="text-sm break-words">{item.name}</p>
                   <p className="text-xs text-gray-400">{item.size} size</p>
                 </div>
               </div>
@@ -113,7 +109,6 @@ function Order({ orders, setOrders }) {
             {/* Note + Delete */}
             <div className="flex gap-2">
               <input
-                type="text"
                 placeholder="Add a note"
                 value={item.note || ""}
                 onChange={(e) =>
@@ -125,7 +120,7 @@ function Order({ orders, setOrders }) {
                     )
                   )
                 }
-                className="flex-1 bg-[#2a2f42] border border-gray-600 text-sm px-3 py-2 rounded-lg placeholder-gray-400 focus:outline-none focus:border-orange-500"
+                className="flex-1 bg-[#2a2f42] border border-gray-600 text-sm px-3 py-2 rounded-lg"
               />
               <button
                 onClick={() => handleDelete(item.id, item.size)}
@@ -155,32 +150,50 @@ function Order({ orders, setOrders }) {
           <span>{finalTotal.toFixed(2)} AED</span>
         </div>
 
-        <button className="w-full bg-orange-500 py-3 rounded-xl mt-4 font-medium">
-          Order now
-        </button>
-      </div>
-
-      {/* ===== MOBILE FIXED SUMMARY + BUTTON ===== */}
-      <div className="fixed bottom-20 left-0 right-0 bg-[#1F1D2B] px-5 py-4 md:hidden border-t border-[#2a2f42] z-40">
-        <div className="flex justify-between text-sm text-gray-400 mb-1">
-          <span>Total</span>
-          <span>{subTotal.toFixed(2)} AED</span>
-        </div>
-
-        <div className="flex justify-between text-sm text-gray-400 mb-1">
-          <span>Discount (5%)</span>
-          <span>- {discountAmount.toFixed(2)} AED</span>
-        </div>
-
-        <div className="flex justify-between text-base font-semibold mb-3">
-          <span>Final Amount</span>
-          <span>{finalTotal.toFixed(2)} AED</span>
-        </div>
-
         <button className="w-full bg-orange-500 py-3 rounded-xl font-medium">
           Order now
         </button>
       </div>
+{/* ===== MOBILE FIXED SUMMARY ===== */}
+<div
+  className="
+    md:hidden
+    fixed
+    bottom-[80px]
+    left-0
+    right-0
+    bg-[#1F1D2B]
+    border-t border-[#2a2f42]
+    px-5 py-4
+    space-y-3
+    z-[9999]
+  "
+  style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+>
+  {/* TOTAL */}
+  <div className="flex justify-between text-sm text-gray-400">
+    <span>Total</span>
+    <span>{subTotal.toFixed(2)} AED</span>
+  </div>
+
+  {/* DISCOUNT */}
+  <div className="flex justify-between text-sm text-gray-400">
+    <span>Discount (5%)</span>
+    <span>- {discountAmount.toFixed(2)} AED</span>
+  </div>
+
+  {/* FINAL */}
+  <div className="flex justify-between text-base font-semibold">
+    <span>Final Amount</span>
+    <span>{finalTotal.toFixed(2)} AED</span>
+  </div>
+
+  {/* ORDER BUTTON */}
+  <button className="w-full bg-orange-500 py-3 rounded-xl font-medium mb-3.5">
+    Order now
+  </button>
+</div>
+
     </div>
   );
 }
