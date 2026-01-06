@@ -61,69 +61,53 @@ function Sidebar() {
           ))}
         </nav>
 
-        {/* EXIT */}
+        {/* EXIT (DESKTOP ONLY) */}
         <button className="w-12 h-12 flex items-center justify-center">
-          <img src={logo7} className="w-6 h-6" />
+          <img src={logo7} className="w-6 h-6 opacity-80" />
         </button>
       </aside>
-{/* ================= MOBILE BOTTOM NAV ================= */}
-<nav
-  className="
-    fixed bottom-0 left-0 right-0 z-50
-    flex md:hidden
-    bg-[#0e0e17]
-    h-20
-    items-center justify-between
-    px-4
-    border-t border-white/10
-  "
-  style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
->
-  {/* NORMAL ICONS */}
-  {logosArray.map((item, index) => (
-    <button
-      key={item.id}
-      onClick={() => setActive(index)}
-      className="flex items-center justify-center"
-    >
-      <div
-        className={`w-11 h-11 flex items-center justify-center
-        rounded-xl transition-all duration-300
-        ${
-          active === index
-            ? "bg-orange-500 shadow-[0_6px_18px_rgba(255,140,60,0.45)]"
-            : "bg-transparent"
-        }`}
+
+      {/* ================= MOBILE BOTTOM NAV ================= */}
+      <nav
+        className="
+          fixed bottom-0 left-0 right-0 z-50
+          flex md:hidden
+          bg-[#0e0e17]
+          h-20
+          items-center justify-between
+          px-4
+          border-t border-white/10
+        "
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <img
-          src={item.src}
-          alt=""
-          className={`w-6 h-6
-            ${active === index
-              ? "brightness-0 invert"
-              : "opacity-60"
-            }`}
-        />
-      </div>
-    </button>
-  ))}
-
-  {/* EXIT ICON (LAST) */}
-  <button
-    onClick={() => console.log("Exit clicked")}
-    className="flex items-center justify-center"
-  >
-    <div className="w-11 h-11 flex items-center justify-center rounded-xl bg-transparent">
-      <img
-        src={logo7}
-        alt="exit"
-        className="w-6 h-6 opacity-70"
-      />
-    </div>
-  </button>
-</nav>
-
-
+        {logosArray.map((item, index) => (
+          <button
+            key={item.id}
+            onClick={() => setActive(index)}
+            className="flex items-center justify-center"
+          >
+            <div
+              className={`w-11 h-11 flex items-center justify-center
+              rounded-xl transition-all duration-300
+              ${
+                active === index
+                  ? "bg-orange-500 shadow-[0_6px_18px_rgba(255,140,60,0.45)]"
+                  : "bg-transparent"
+              }`}
+            >
+              <img
+                src={item.src}
+                alt=""
+                className={`w-6 h-6
+                  ${active === index
+                    ? "brightness-0 invert"
+                    : "opacity-70"
+                  }`}
+              />
+            </div>
+          </button>
+        ))}
+      </nav>
     </>
   );
 }
