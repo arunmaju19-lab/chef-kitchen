@@ -8,85 +8,120 @@ function Sidebar() {
 
   return (
     <>
-      {/* DESKTOP SIDEBAR */}
+      {/* ================= DESKTOP SIDEBAR ================= */}
       <aside className="hidden md:flex w-24 bg-[#0e0e17] h-screen flex-col items-center py-6 relative">
+        
+        {/* LOGO */}
         <div className="mb-10">
           <img src={logo1} alt="logo" className="w-9 h-9" />
         </div>
 
-        <nav className="relative flex flex-col gap-6 flex-1 items-center">
+        {/* NAV */}
+        <nav className="relative flex flex-col gap-y-4 flex-1 items-center w-full">
           {logosArray.map((item, index) => (
             <button
               key={item.id}
               onClick={() => setActive(index)}
-              className="relative w-16 h-16 flex items-center justify-center"
+              className="relative w-full h-[76px] flex items-center justify-center"
             >
-              {/* CURVED BACK CUT */}
+              {/* ACTIVE SHADE */}
               {active === index && (
-                <div className="absolute inset-0 overflow-hidden">
+                <>
                   <div
-                    className="absolute -left-6 top-1/2 -translate-y-1/2
-                    h-20 bg-[#1b2032] rounded-[38px]"
+                    className="absolute inset-y-0 right-0 bg-[#1b2032] z-10 rounded-l-[10px]"
+                    style={{ width: "calc(100% - 16px)" }}
                   />
-                </div>
+
+                  <span className="absolute -top-[26px] right-0 w-[26px] h-[26px] bg-[#0e0e17] rounded-br-[26px] z-20" />
+                  <span className="absolute -top-[26px] right-0 w-[26px] h-[26px] bg-[#1b2032] z-10" />
+
+                  <span className="absolute -bottom-[26px] right-0 w-[26px] h-[26px] bg-[#0e0e17] rounded-tr-[26px] z-20" />
+                  <span className="absolute -bottom-[26px] right-0 w-[26px] h-[26px] bg-[#1b2032] z-10" />
+                </>
               )}
 
-              {/* ORANGE BUTTON */}
+              {/* ICON */}
               <div
-                className={`relative z-10 w-14 h-14 flex items-center justify-center
+                className={`relative z-30 w-12 h-12 flex items-center justify-center
                 rounded-2xl transition-all duration-300
                 ${
                   active === index
-                    ? "bg-orange-500 shadow-[0_10px_30px_rgba(255,140,60,0.5)] scale-105"
+                    ? "bg-orange-500 shadow-[0_12px_35px_rgba(255,140,60,0.45)]"
                     : "bg-transparent"
                 }`}
               >
-                <img src={item.src} className="w-6 h-6 block object-contain" />
+                <img
+                  src={item.src}
+                  alt=""
+                  className={`w-6 h-6
+                    ${active === index ? "brightness-0 invert" : "opacity-80"}`}
+                />
               </div>
             </button>
           ))}
         </nav>
 
-        <button className="w-12 h-12 rounded-2xl flex items-center justify-center">
-          <img src={logo7} className="w-6 h-6 block object-contain" />
+        {/* EXIT */}
+        <button className="w-12 h-12 flex items-center justify-center">
+          <img src={logo7} className="w-6 h-6" />
         </button>
       </aside>
-
-    {/* MOBILE BOTTOM BAR */}
-<aside className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1c1c2e] border-t border-[#1c1f2c] z-9999">
-  <nav className="flex items-center justify-between px-4 py-3">
-    {logosArray.map((item, index) => (
-      <button
-        key={item.id}
-        onClick={() => setActive(index)}
-        className="relative w-12 h-12 flex items-center justify-center"
+{/* ================= MOBILE BOTTOM NAV ================= */}
+<nav
+  className="
+    fixed bottom-0 left-0 right-0 z-50
+    flex md:hidden
+    bg-[#0e0e17]
+    h-20
+    items-center justify-between
+    px-4
+    border-t border-white/10
+  "
+  style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+>
+  {/* NORMAL ICONS */}
+  {logosArray.map((item, index) => (
+    <button
+      key={item.id}
+      onClick={() => setActive(index)}
+      className="flex items-center justify-center"
+    >
+      <div
+        className={`w-11 h-11 flex items-center justify-center
+        rounded-xl transition-all duration-300
+        ${
+          active === index
+            ? "bg-orange-500 shadow-[0_6px_18px_rgba(255,140,60,0.45)]"
+            : "bg-transparent"
+        }`}
       >
-        {/* ORANGE BACKGROUND */}
-        <div
-          className={`
-            absolute inset-0 rounded-xl transition-all duration-300
-            ${active === index
-              ? "bg-orange-500 scale-110 shadow-[0_8px_25px_rgba(255,140,60,0.45)]"
-              : "bg-transparent scale-100"
-            }
-          `}
-        />
-
-        {/* ICON */}
         <img
           src={item.src}
-          className={`
-            relative z-10 w-6 h-6 object-contain transition-all duration-300
+          alt=""
+          className={`w-6 h-6
             ${active === index
-              ? "filter brightness-0 invert"
-              : "opacity-80"
-            }
-          `}
+              ? "brightness-0 invert"
+              : "opacity-60"
+            }`}
         />
-      </button>
-    ))}
-  </nav>
-</aside>
+      </div>
+    </button>
+  ))}
+
+  {/* EXIT ICON (LAST) */}
+  <button
+    onClick={() => console.log("Exit clicked")}
+    className="flex items-center justify-center"
+  >
+    <div className="w-11 h-11 flex items-center justify-center rounded-xl bg-transparent">
+      <img
+        src={logo7}
+        alt="exit"
+        className="w-6 h-6 opacity-70"
+      />
+    </div>
+  </button>
+</nav>
 
 
     </>
