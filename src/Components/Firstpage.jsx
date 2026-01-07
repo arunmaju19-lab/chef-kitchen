@@ -44,32 +44,46 @@ function Firstpage() {
   }, [showOrder]);
 
   const tabs = [
-    { id: "1", label: "Today Special" },
-    { id: "2", label: "Our Specials" },
-    { id: "3", label: "South Indian Special" },
-  ];
+  { id: "1", label: "Today Special" },       // all
+  { id: "2", label: "Our Specials" },        // noodles
+  { id: "3", label: "South Indian Special" } // rice
+];
 
+
+  
   const images = [
-    { id: 1, name: "Healthy noodle with spinach leaf", img: noodles, price: 25, available: 22 },
-    { id: 2, name: "Hot spicy fried rice with omelet", img: friedRice, price: 25, available: 13 },
-    { id: 3, name: "Spicy  noodle with special omelette", img: instantNoodles, price: 25, available: 17 },
-    { id: 4, name: "Healthy noodle with spinach leaf", img: spinach, price: 20, available: 10 },
-    { id: 5, name: "Hot spicy fried rice with omelet", img: omleterice, price: 28, available: 12 },
-    { id: 6, name: "Spicy  noodle with special omelette", img: specialomlete, price: 30, available: 8 },
-    { id: 7, name: "Spicy seasoned seafood noodles", img: seafoodnoodles, price: 32, available: 15 },
-    { id: 8, name: "Salted pasta with mashroom sauce", img: saltedpasta, price: 26, available: 20 },
-    { id: 9, name: "Beef dumpling in hot and sour soup", img: beef, price: 35, available: 5 },
-  ];
+  { id: 1, name: "Healthy noodle with spinach leaf", img: noodles, price: 25, available: 22, category: "noodles" },
+  { id: 2, name: "Hot spicy fried rice with omelet", img: friedRice, price: 25, available: 13, category: "rice" },
+  { id: 3, name: "Spicy noodle with special omelette", img: instantNoodles, price: 25, available: 17, category: "noodles" },
+  { id: 4, name: "Healthy noodle with spinach leaf", img: spinach, price: 20, available: 10, category: "noodles" },
+  { id: 5, name: "Hot spicy fried rice with omelet", img: omleterice, price: 28, available: 12, category: "rice" },
+  { id: 6, name: "Spicy noodle with special omelette", img: specialomlete, price: 30, available: 8, category: "noodles" },
+  { id: 7, name: "Spicy seasoned seafood noodles", img: seafoodnoodles, price: 32, available: 15, category: "noodles" },
+  { id: 8, name: "Salted pasta with mashroom sauce", img: saltedpasta, price: 26, available: 20, category: "pasta" },
+  { id: 9, name: "Beef dumpling in hot and sour soup", img: beef, price: 35, available: 5, category: "rice" },
+];
+
   const filteredImages = images.filter((item) => {
-    const matchSearch = item.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  const matchSearch = item.name
+    .toLowerCase()
+    .includes(search.toLowerCase());
 
-    const matchTab =
-      activeTab === "1" ? true : item.category === activeTab;
+  let matchTab = true;
 
-    return matchSearch && matchTab;
-  });
+  if (activeTab === "2") {
+    // Our Specials → noodles
+    matchTab = item.category === "noodles";
+  }
+
+  if (activeTab === "3") {
+    // South Indian Special → rice
+    matchTab = item.category === "rice";
+  }
+
+  // activeTab === "1" → Today Special → all items
+  return matchSearch && matchTab;
+});
+
 
   // Check if item+size already in cart
   const isInCart = (id, s) => {
@@ -206,7 +220,7 @@ function Firstpage() {
 
         {/* DISH LIST */}
         <div
-          className="overflow-y-auto px-2 pb-14 hide-scrollbar bg-[#1b2032] h-[calc(100vh-260px)] md:flex-1 md:h-auto">
+          className="overflow-y-auto px-2 pb-14 hide-scrollbar  bg-[#1b2032] h-[calc(100vh-260px)] md:flex-1 md:h-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-18 pt-24  bg-[#1b2032]">
             {filteredImages.length > 0 ? (
               filteredImages.map((item) => (
