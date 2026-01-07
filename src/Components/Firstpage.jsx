@@ -26,6 +26,9 @@ function Firstpage() {
   const [orderType, setOrderType] = useState("Dine In");
   const [openType, setOpenType] = useState(false);
   const [showOrder, setShowOrder] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [paidAmount, setPaidAmount] = useState(0);
+
 
   const orderPanelRef = useRef(null);
   useEffect(() => {
@@ -42,6 +45,18 @@ function Firstpage() {
     if (showOrder) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showOrder]);
+
+useEffect(() => {
+  if (showSuccess) {
+    const t = setTimeout(() => {
+      setShowSuccess(false);
+      setShowOrder(false);
+      setPaidAmount(0);
+    }, 3000);
+    return () => clearTimeout(t);
+  }
+}, [showSuccess]);
+
 
   const tabs = [
   { id: "1", label: "Today Special" },       // all
@@ -122,7 +137,7 @@ function Firstpage() {
             </div>
 
             {/* SEARCH + CART */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center mt-4 gap-4">
               <div className="relative w-full max-w-xs sm:max-w-sm">
 
                 <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
@@ -310,7 +325,39 @@ function Firstpage() {
         transform transition-transform duration-300 
         ${showOrder ? "translate-x-0" : "translate-x-full"} z-20 `}
       >
-        <Order orders={orders} setOrders={setOrders} />
+<Order
+  orders={orders}
+  setOrders={setOrders}
+  onOrderSuccess={(finalAmount) => {
+    setPaidAmount(finalAmount);
+    setShowSuccess(true);
+  }}
+/>
+
+
+{showSuccess && (
+  <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70">
+    <div className="bg-[#1f2433] w-80 rounded-2xl p-6
+      flex flex-col items-center gap-4 animate-scaleFade">
+
+      <div className="w-20 h-20 bg-green-500 rounded-full
+        flex items-center justify-center animate-pop text-white text-2xl">
+        ✓
+      </div>
+
+      <h2 className="text-lg font-semibold">Order Confirmed</h2>
+     <p className="text-sm text-gray-400">
+  Final Amount Paid
+</p>
+<p className="text-xl font-bold text-green-400">
+  {paidAmount.toFixed(2)} AED
+</p>
+
+
+    </div>
+  </div>
+)}
+
       </div>
 
     </div>

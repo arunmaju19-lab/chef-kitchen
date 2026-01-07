@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import deleteIcon from "../assets/foods/delete.svg";
 
-function Order({ orders, setOrders }) {
+function Order({ orders, setOrders,onOrderSuccess }) {
   const [activeType, setActiveType] = useState("Dine In");
   const discountRate = 0.05;
 
@@ -21,12 +21,22 @@ function Order({ orders, setOrders }) {
     setOrders(orders.filter((item) => !(item.id === id && item.size === size)));
   };
 
+  /* ===== ORDER NOW ===== */
+const handleOrderNow = () => {
+  if (orders.length === 0) return;
+
+  onOrderSuccess(finalTotal); // 🔥 parent (Firstpage) notify
+  setOrders([]);    // clear cart
+};
+
   /* ===== PRICE ===== */
   const subTotal = orders.reduce((sum, item) => sum + item.price * item.qty, 0);
   const discountAmount = subTotal * discountRate;
   const finalTotal = subTotal - discountAmount;
+  
 
   const types = ["Dine In", "Take Away", "Delivery"];
+  
 
   return (
     <div className="relative w-full h-screen bg-[#1F1D2B] text-white flex flex-col rounded-l-2xl overflow-hidden">
@@ -149,10 +159,14 @@ function Order({ orders, setOrders }) {
           <span>Final Amount</span>
           <span>{finalTotal.toFixed(2)} AED</span>
         </div>
+<button
+  onClick={handleOrderNow}
+  className="w-full bg-orange-500 py-3 rounded-xl font-medium"
+>
+  Order now
+</button>
 
-        <button className="w-full bg-orange-500 py-3 rounded-xl font-medium">
-          Order now
-        </button>
+
       </div>
 {/* ===== MOBILE FIXED SUMMARY ===== */}
 <div
@@ -189,9 +203,14 @@ function Order({ orders, setOrders }) {
   </div>
 
   {/* ORDER BUTTON */}
-  <button className="w-full bg-orange-500 py-3 rounded-xl font-medium mb-3.5">
-    Order now
-  </button>
+  <button
+  onClick={handleOrderNow}
+  className="w-full bg-orange-500 py-3 rounded-xl font-medium mb-3.5"
+>
+  Order now
+</button>
+
+
 </div>
 
     </div>
