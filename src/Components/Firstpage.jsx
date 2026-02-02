@@ -1,217 +1,172 @@
 import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./Sidebar";
 import Order from "./Order";
-import { FaSearch, FaChevronDown, FaShoppingCart } from "react-icons/fa";
-
-import noodles from "../assets/foods/Noodles.svg";
-import friedRice from "../assets/foods/friedrice.svg";
-import instantNoodles from "../assets/foods/instantnoodles.svg";
-import spinach from "../assets/foods/spinach.svg";
-import omleterice from "../assets/foods/omleterice.svg";
-import specialomlete from "../assets/foods/specialomlete.svg";
-import seafoodnoodles from "../assets/foods/seafoodnoodles.svg";
-import saltedpasta from "../assets/foods/saltedpasta.svg";
-import beef from "../assets/foods/beef.svg";
+import { FaSearch, FaShoppingCart, FaChevronDown } from "react-icons/fa";
+import { useProducts } from "../context/ProductsContext";
 
 function Firstpage() {
-  const [size, setSize] = useState({
-    1: "L", 2: "L", 3: "L", 4: "L", 5: "L",
-    6: "L", 7: "L", 8: "L", 9: "L",
-  });
+  const { products } = useProducts();
 
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("1");
-  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [size, setSize] = useState({});
   const [orders, setOrders] = useState([]);
   const [orderType, setOrderType] = useState("Dine In");
   const [openType, setOpenType] = useState(false);
   const [showOrder, setShowOrder] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [paidAmount, setPaidAmount] = useState(0);
-
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   const orderPanelRef = useRef(null);
+  const orderTypeRef = useRef(null);
+
+  /* CLOCK */
   useEffect(() => {
     const timer = setInterval(() => setCurrentDateTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  /* INIT SIZE PER PRODUCT */
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    if (products.length > 0) {
+      const initial = {};
+      products.forEach((p) => {
+        initial[p.id] = p.sizes[0];
+      });
+      setSize(initial);
+    }
+  }, [products]);
+
+  /* OUTSIDE CLICK HANDLER */
+  useEffect(() => {
+    const handler = (e) => {
       if (orderPanelRef.current && !orderPanelRef.current.contains(e.target)) {
         setShowOrder(false);
       }
+      if (orderTypeRef.current && !orderTypeRef.current.contains(e.target)) {
+        setOpenType(false);
+      }
     };
-    if (showOrder) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showOrder]);
 
-useEffect(() => {
-  if (showSuccess) {
-    const t = setTimeout(() => {
-      setShowSuccess(false);
-      setShowOrder(false);
-      setPaidAmount(0);
-    }, 3000);
-    return () => clearTimeout(t);
-  }
-}, [showSuccess]);
-
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   const tabs = [
-  { id: "1", label: "Today Special" },       // all
-  { id: "2", label: "Our Specials" },        // noodles
-  { id: "3", label: "South Indian Special" } // rice
-];
+    { id: "1", label: "Today Special" },
+    { id: "2", label: "Our Specials" },
+    { id: "3", label: "South Indian Special" },
+  ];
 
+  const filteredProducts = products.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-  
-  const images = [
-  { id: 1, name: "Healthy noodle with spinach leaf", img: noodles, price: 25, available: 22, category: "noodles" },
-  { id: 2, name: "Hot spicy fried rice with omelet", img: friedRice, price: 25, available: 13, category: "rice" },
-  { id: 3, name: "Spicy noodle with special omelette", img: instantNoodles, price: 25, available: 17, category: "noodles" },
-  { id: 4, name: "Healthy noodle with spinach leaf", img: spinach, price: 20, available: 10, category: "noodles" },
-  { id: 5, name: "Hot spicy fried rice with omelet", img: omleterice, price: 28, available: 12, category: "rice" },
-  { id: 6, name: "Spicy noodle with special omelette", img: specialomlete, price: 30, available: 8, category: "noodles" },
-  { id: 7, name: "Spicy seasoned seafood noodles", img: seafoodnoodles, price: 32, available: 15, category: "noodles" },
-  { id: 8, name: "Salted pasta with mashroom sauce", img: saltedpasta, price: 26, available: 20, category: "pasta" },
-  { id: 9, name: "Beef dumpling in hot and sour soup", img: beef, price: 35, available: 5, category: "rice" },
-];
+  const isInCart = (id, s) =>
+    orders.some((o) => o.id === id && o.size === s);
 
-  const filteredImages = images.filter((item) => {
-  const matchSearch = item.name
-    .toLowerCase()
-    .includes(search.toLowerCase());
-
-  let matchTab = true;
-
-  if (activeTab === "2") {
-    // Our Specials → noodles
-    matchTab = item.category === "noodles";
-  }
-
-  if (activeTab === "3") {
-    // South Indian Special → rice
-    matchTab = item.category === "rice";
-  }
-
-  // activeTab === "1" → Today Special → all items
-  return matchSearch && matchTab;
-});
-
-
-  // Check if item+size already in cart
-  const isInCart = (id, s) => {
-    return orders.some(o => o.id === id && o.size === s);
+  const addToCart = (item) => {
+    setOrders((prev) => {
+      if (isInCart(item.id, item.size)) return prev;
+      return [...prev, item];
+    });
   };
 
-  // Add to cart only if same size not present
-  const addToOrder = (newItem) => {
-    if (!isInCart(newItem.id, newItem.size)) {
-      setOrders([...orders, newItem]);
-    }
-  };
-  const totalItems = orders.length; // Badge shows number of unique items
+  const totalItems = orders.length;
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-[#1b2032] text-white">
-
       <Sidebar />
 
       <div className="flex-1 flex flex-col">
-
         {/* HEADER */}
-        <div className="p-2 sticky top-0 z-20 bg-[#1b2032]">
-
-          <div className="flex flex-col gap-4 mb-6 md:flex-row md:justify-between">
+        <div className="p-4 sticky top-0 z-20 bg-[#1b2032]">
+          <div className="flex justify-between items-center mb-6">
             <div>
-              <h1 className="text-2xl font-bold ">
-                Chef Kitchen
-              </h1>
-              {currentDateTime.toLocaleDateString("en-IN", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
+              <h1 className="text-2xl font-bold">Chef Kitchen</h1>
+              <p className="text-sm text-gray-400">
+                {currentDateTime.toLocaleDateString("en-IN", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
             </div>
 
-            {/* SEARCH + CART */}
-            <div className="flex items-center mt-4 gap-4">
-              <div className="relative w-full max-w-xs sm:max-w-sm">
-
-                <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+            <div className="flex gap-4 items-center">
+              <div className="relative">
+                <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search food..."
-                  className="w-full bg-[#2a2f42] rounded-xl pl-10 pr-4 py-2 text-sm"
+                  className="bg-[#2a2f42] rounded-xl pl-9 pr-4 py-2 text-sm"
                 />
               </div>
 
               <button
                 onClick={() => totalItems > 0 && setShowOrder(true)}
-                className={`relative flex items-center justify-center w-10 h-10 aspect-square min-w-40px min-h-40px rounded-full shrink-0
-                 ${totalItems === 0
-                    ? "bg-[#2a2f42] text-gray-500 cursor-not-allowed"
-                    : "bg-orange-500 text-white"
+                className={`relative w-10 h-10 rounded-full flex items-center justify-center
+                  ${
+                    totalItems === 0
+                      ? "bg-[#2a2f42] text-gray-500"
+                      : "bg-orange-500 text-white"
                   }`}
               >
-                <FaShoppingCart className="text-base leading-none" />
-
+                <FaShoppingCart />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-xs
+                    w-4 h-4 rounded-full flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}
               </button>
-
             </div>
           </div>
 
           {/* TABS */}
-          <div className="flex gap-8  mb-6 border-b border-[#2a2f42] overflow-x-auto whitespace-nowrap hide-scrollbar">
-            {tabs.map((tab) => (
+          <div className="flex gap-8 border-b border-[#2a2f42] mb-6">
+            {tabs.map((t) => (
               <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`pb-3 relative whitespace-nowrap shrink-0
-        transition-colors duration-200
-        ${activeTab === tab.id
+                key={t.id}
+                onClick={() => setActiveTab(t.id)}
+                className={`pb-3 relative ${
+                  activeTab === t.id
                     ? "text-orange-500"
-                    : "text-gray-400 hover:text-orange-400"
-                  }`}
+                    : "text-gray-400"
+                }`}
               >
-                {tab.label}
-
-                {activeTab === tab.id && (
-                  <span className="absolute left-0 -bottom-px w-full h-0.5 bg-orange-500 transition-all" />
+                {t.label}
+                {activeTab === t.id && (
+                  <span className="absolute left-0 bottom-0 w-full h-0.5 bg-orange-500" />
                 )}
               </button>
             ))}
           </div>
 
-          {/* DINE IN / TAKE AWAY / DELIVERY */}
+          {/* CHOOSE DISH + ORDER TYPE */}
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold">Choose Dishes</h2>
 
-            <div className="relative">
+            <div ref={orderTypeRef} className="relative">
               <button
-                onClick={() => setOpenType(!openType)}
+                onClick={() => setOpenType((p) => !p)}
                 className="bg-[#2a2f42] border border-[#343a52]
                   px-4 py-2 rounded-xl text-sm flex items-center gap-2
-                  hover:bg-orange-500 cursor-pointer"
+                  hover:bg-[#32374d] transition"
               >
                 {orderType}
                 <FaChevronDown
-                  className={`transition-transform ${openType ? "rotate-180" : ""}`}
+                  className={`transition-transform ${
+                    openType ? "rotate-180" : ""
+                  }`}
                 />
               </button>
 
               {openType && (
-                <div className="absolute right-0 mt-2 w-40 bg-[#2a2f42]
-                  border border-[#343a52] rounded-xl overflow-hidden z-20">
+                <div className="absolute right-0 mt-2 w-40
+                  bg-[#2a2f42] border border-[#343a52]
+                  rounded-xl overflow-hidden z-30">
                   {["Dine In", "Take Away", "Delivery"]
                     .filter((t) => t !== orderType)
                     .map((type) => (
@@ -233,47 +188,58 @@ useEffect(() => {
           </div>
         </div>
 
-        {/* DISH LIST */}
-        <div
-          className="overflow-y-auto px-2 pb-14 hide-scrollbar  bg-[#1b2032] h-[calc(100vh-260px)] md:flex-1 md:h-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-18 pt-24  bg-[#1b2032]">
-            {filteredImages.length > 0 ? (
-              filteredImages.map((item) => (
+        {/* PRODUCTS GRID */}
+        <div className="overflow-y-auto px-4 pb-20 hide-scrollbar">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-20 pt-24">
+            {filteredProducts.map((p) => {
+              const selectedSize = size[p.id] || p.sizes[0];
+              const price = p.prices[selectedSize];
+
+              return (
                 <div
-                  key={item.id}
-                  className="relative bg-[#1f1d2b] rounded-2xl pt-24 pb-6 px-4 text-center" >
-                  {/* IMAGE SIZE DYNAMIC */}
+                  key={p.id}
+                  className="relative bg-[#1f1d2b] rounded-2xl
+                    pt-24 pb-6 px-4 text-center"
+                >
+                  {/* IMAGE */}
                   <img
-                    src={item.img}
-                    alt={item.name}
-                    className={`absolute -top-16 left-1/2 -translate-x-1/2 transition-all duration-300
-                      ${size[item.id] === "S" ? "w-24 h-24" :
-                        size[item.id] === "M" ? "w-28 h-28" : "w-32 h-32"}`}
+                    src={p.image}
+                    alt={p.name}
+                    className={`absolute -top-10 left-1/2 -translate-x-1/2
+                      transition-all duration-300 ease-in-out
+                      ${
+                        selectedSize === "S"
+                          ? "w-24 h-24"
+                          : selectedSize === "M"
+                          ? "w-28 h-28"
+                          : "w-32 h-32"
+                      }
+                      rounded-full object-cover`}
                   />
 
-                  <h3 className="text-sm font-medium mb-1">{item.name}</h3>
+                  <h3 className="text-sm font-medium mb-1">{p.name}</h3>
+
                   <p className="text-green-400 font-semibold mb-1">
-                    {(() => {
-                      let price = item.price;
-                      if (size[item.id] === "S") price -= 3;
-                      else if (size[item.id] === "L") price += 3;
-                      return price.toFixed(2);
-                    })()} AED
+                    {price} AED
                   </p>
 
-                  <p className="text-gray-400 text-xs mb-3">
-                    {item.available} Bowls available
+                  <p className="text-gray-400 text-xs mb-4">
+                    {p.stock} Bowls available
                   </p>
 
                   {/* SIZE BUTTONS */}
-                  <div className="flex justify-center gap-2 mb-5">
-                    {["S", "M", "L"].map((s) => (
+                  <div className="flex justify-center gap-2 mb-4">
+                    {p.sizes.map((s) => (
                       <button
-                        key={s}
-                        onClick={() => setSize({ ...size, [item.id]: s })}
-                        className={`w-8 h-8 rounded-md text-xs transition ${size[item.id] === s
-                          ? "bg-orange-500 text-white"
-                          : "bg-[#1f2433] text-gray-300"
+                        key={`${p.id}-${s}`}
+                        onClick={() =>
+                          setSize((prev) => ({ ...prev, [p.id]: s }))
+                        }
+                        className={`w-8 h-8 rounded-md text-xs transition
+                          ${
+                            selectedSize === s
+                              ? "bg-orange-500 text-white"
+                              : "bg-[#1f2433] text-gray-300"
                           }`}
                       >
                         {s}
@@ -281,39 +247,33 @@ useEffect(() => {
                     ))}
                   </div>
 
-                  {/* ADD BUTTON */}
+                  {/* ADD TO CART */}
                   <button
-                    className={`px-4 py-2 rounded-xl transition
-                      ${isInCart(item.id, size[item.id])
-                        ? "bg-red-500 cursor-not-allowed"
-                        : "bg-orange-500 hover:bg-orange-600 cursor-pointer"
-                      }`}
+                    disabled={isInCart(p.id, selectedSize)}
                     onClick={() =>
-                      addToOrder({
-                        id: item.id,
-                        name: item.name,
-                        size: size[item.id],
+                      addToCart({
+                        id: p.id,
+                        name: p.name,
+                        size: selectedSize,
+                        price,
                         qty: 1,
-                        price:
-                          size[item.id] === "S"
-                            ? item.price - 3
-                            : size[item.id] === "L"
-                              ? item.price + 3
-                              : item.price,
-                        img: item.img,
+                        img: p.image,
                       })
                     }
+                    className={`px-4 py-2 rounded-xl text-sm
+                      ${
+                        isInCart(p.id, selectedSize)
+                          ? "bg-red-500 cursor-not-allowed"
+                          : "bg-orange-500 hover:bg-orange-600"
+                      }`}
                   >
-                    Add to cart
+                    {isInCart(p.id, selectedSize)
+                      ? "Added"
+                      : "Add to cart"}
                   </button>
                 </div>
-              ))
-            ) : (
-              <div className="col-span-4 text-center text-gray-400 mt-20">
-                No results found
-              </div>
-            )}
-
+              );
+            })}
           </div>
         </div>
       </div>
@@ -321,45 +281,12 @@ useEffect(() => {
       {/* ORDER PANEL */}
       <div
         ref={orderPanelRef}
-        className={`fixed right-0 top-0 w-full max-w-sm h-screen bg-[#1f2433]
-        transform transition-transform duration-300 
-        ${showOrder ? "translate-x-0" : "translate-x-full"} z-20 `}
+        className={`fixed right-0 top-0 w-full max-w-sm h-screen
+          bg-[#1f2433] transform transition-transform duration-300
+          ${showOrder ? "translate-x-0" : "translate-x-full"} z-30`}
       >
-<Order
-  orders={orders}
-  setOrders={setOrders}
-  onOrderSuccess={(finalAmount) => {
-    setPaidAmount(finalAmount);
-    setShowSuccess(true);
-  }}
-/>
-
-
-{showSuccess && (
-  <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70">
-    <div className="bg-[#1f2433] w-80 rounded-2xl p-6
-      flex flex-col items-center gap-4 animate-scaleFade">
-
-      <div className="w-20 h-20 bg-green-500 rounded-full
-        flex items-center justify-center animate-pop text-white text-2xl">
-        ✓
+        <Order orders={orders} setOrders={setOrders} />
       </div>
-
-      <h2 className="text-lg font-semibold">Order Confirmed</h2>
-     <p className="text-sm text-gray-400">
-  Final Amount Paid
-</p>
-<p className="text-xl font-bold text-green-400">
-  {paidAmount.toFixed(2)} AED
-</p>
-
-
-    </div>
-  </div>
-)}
-
-      </div>
-
     </div>
   );
 }

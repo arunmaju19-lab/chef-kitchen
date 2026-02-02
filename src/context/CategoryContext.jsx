@@ -5,38 +5,57 @@ const CategoryContext = createContext();
 export const CategoryProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
 
-  // Load categories
+  /* LOAD FROM STORAGE */
   useEffect(() => {
     const stored = localStorage.getItem("categories");
-    if (stored) setCategories(JSON.parse(stored));
+    if (stored) {
+      setCategories(JSON.parse(stored));
+    }
   }, []);
 
   const saveToStorage = (data) => {
     localStorage.setItem("categories", JSON.stringify(data));
   };
 
+  /* ADD CATEGORY (ID BASED) */
   const addCategory = (name) => {
-    const updated = [...categories, { name, products: 0, stock: 0 }];
+    const updated = [
+      ...categories,
+      {
+        id: Date.now(), // 🔥 UNIQUE ID
+        name,
+        products: 0,
+        stock: 0,
+      },
+    ];
     setCategories(updated);
     saveToStorage(updated);
   };
 
-  const editCategory = (index, name) => {
-    const updated = [...categories];
-    updated[index].name = name;
+  /* EDIT CATEGORY BY ID */
+  const editCategory = (id, name) => {
+    const updated = categories.map((cat) =>
+      cat.id === id ? { ...cat, name } : cat
+    );
     setCategories(updated);
     saveToStorage(updated);
   };
 
-  const deleteCategory = (index) => {
-    const updated = categories.filter((_, i) => i !== index);
+  /* DELETE CATEGORY BY ID */
+  const deleteCategory = (id) => {
+    const updated = categories.filter((cat) => cat.id !== id);
     setCategories(updated);
     saveToStorage(updated);
   };
 
-  // ⭐ Calculate products count & stock from products list
+  /* RECALCULATE STATS (SAFE) */
   const recalculateCategoryStats = (products) => {
-    const updated = categories.map((cat) => {
+    const stored = localStorage.getItem("categories");
+    if (!stored) return;
+
+    const baseCategories = JSON.parse(stored);
+
+    const updated = baseCategories.map((cat) => {
       const related = products.filter(
         (p) => p.category === cat.name
       );
