@@ -48,14 +48,15 @@ function Home() {
         </h3>
 
         {/* Button */}
-        <button
-          onClick={() => navigate("/menu")}
-          className="bg-amber-500 text-white 
-                     mt-6 px-12 py-3 rounded-lg
-                     hover:bg-amber-400 transition"
-        >
-          Explore Menu
-        </button>
+      <button
+  onClick={() => navigate("/login")}
+  className="bg-amber-500 text-white 
+             mt-6 px-12 py-3 rounded-lg
+             hover:bg-amber-400 transition"
+>
+  Explore Menu
+</button>
+
 
       </div>
     </div>

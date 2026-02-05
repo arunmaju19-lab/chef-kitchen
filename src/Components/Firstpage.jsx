@@ -37,7 +37,7 @@ function Firstpage() {
     }
   }, [products]);
 
-  /* ================= OUTSIDE CLICK (ORDER TYPE) ================= */
+  /* ================= OUTSIDE CLICK ================= */
   useEffect(() => {
     const handler = (e) => {
       if (orderTypeRef.current && !orderTypeRef.current.contains(e.target)) {
@@ -48,21 +48,14 @@ function Firstpage() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  /* ================= OUTSIDE CLICK (ORDER PAGE) ================= */
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handler = (e) => {
       if (orderRef.current && !orderRef.current.contains(e.target)) {
         closeOrder();
       }
     };
-
-    if (showOrder) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    if (showOrder) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [showOrder]);
 
   /* ================= TABS ================= */
@@ -75,28 +68,23 @@ function Firstpage() {
   const selectedCategory =
     tabs.find((t) => t.id === activeTab)?.label;
 
-  /* ================= FILTER PRODUCTS ================= */
-  const filteredProducts = products.filter((p) => {
-    const matchSearch = p.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchCategory = p.category === selectedCategory;
-    return matchSearch && matchCategory;
-  });
+  const filteredProducts = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(search.toLowerCase()) &&
+      p.category === selectedCategory
+  );
 
   const isInCart = (id, s) =>
     orders.some((o) => o.id === id && o.size === s);
 
   const addToCart = (item) => {
-    setOrders((prev) => {
-      if (isInCart(item.id, item.size)) return prev;
-      return [...prev, item];
-    });
+    setOrders((prev) =>
+      isInCart(item.id, item.size) ? prev : [...prev, item]
+    );
   };
 
   const totalItems = orders.length;
 
-  /* ================= OPEN / CLOSE ORDER ================= */
   const openOrder = () => {
     setShowOrder(true);
     setTimeout(() => setOrderAnimating(true), 10);
@@ -107,20 +95,17 @@ function Firstpage() {
     setTimeout(() => setShowOrder(false), 300);
   };
 
-  const handleOrderSuccess = () => closeOrder();
-
   return (
     <>
-      {/* ================= MAIN PAGE ================= */}
       <div className="flex flex-col md:flex-row h-screen bg-[#0f1220] text-white overflow-y-auto hide-scrollbar">
-
         <Sidebar />
 
         <div className="flex-1 flex flex-col">
-
           {/* HEADER */}
-<div className="p-4 sticky top-0 z-20 bg-[#0f1220] ">
-            <div className="flex justify-between items-center mb-6">
+          <div className="p-4 sticky top-0 z-20 bg-[#0f1220]">
+
+            {/* TITLE + CART */}
+            <div className="flex justify-between items-center mb-4">
               <div>
                 <h1 className="text-2xl font-bold">Chef Kitchen</h1>
                 <p className="text-sm text-[#8b90b5]">
@@ -133,40 +118,39 @@ function Firstpage() {
                 </p>
               </div>
 
-              <div className="flex gap-4 items-center">
-                <div className="relative">
-                  <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8b90b5]" />
-                  <input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search food..."
-                    className="bg-[#1d2240] rounded-xl pl-9 pr-4 py-2 text-sm
-                               text-white placeholder-[#8b90b5]"
-                  />
-                </div>
+              <button
+                onClick={() => totalItems > 0 && openOrder()}
+                className={`relative w-10 h-10 rounded-full flex items-center justify-center
+                  ${
+                    totalItems === 0
+                      ? "bg-[#1d2240] text-[#8b90b5]"
+                      : "bg-orange-500 text-white"
+                  }`}
+              >
+                <FaShoppingCart />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-xs
+                    w-4 h-4 rounded-full flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+            </div>
 
-                <button
-                  onClick={() => totalItems > 0 && openOrder()}
-                  className={`relative w-10 h-10 rounded-full flex items-center justify-center
-                    ${
-                      totalItems === 0
-                        ? "bg-[#1d2240] text-[#8b90b5]"
-                        : "bg-orange-500 text-white"
-                    }`}
-                >
-                  <FaShoppingCart />
-                  {totalItems > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-xs
-                      w-4 h-4 rounded-full flex items-center justify-center">
-                      {totalItems}
-                    </span>
-                  )}
-                </button>
-              </div>
+            {/* SEARCH */}
+            <div className="relative w-full mb-6">
+              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8b90b5]" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search food..."
+                className="bg-[#1d2240] rounded-xl pl-9 pr-4 py-2 text-sm
+                           text-white placeholder-[#8b90b5] w-full"
+              />
             </div>
 
             {/* TABS */}
-            <div className="flex gap-8 border-b border-[#23284a] mb-6">
+            <div className="flex gap-8 border-b border-[#23284a] mb-6 overflow-x-auto hide-scrollbar whitespace-nowrap">
               {tabs.map((t) => (
                 <button
                   key={t.id}
@@ -216,8 +200,7 @@ function Firstpage() {
                             setOrderType(type);
                             setOpenType(false);
                           }}
-                          className="w-full text-left px-4 py-2 text-sm
-                            hover:bg-orange-500"
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-orange-500"
                         >
                           {type}
                         </button>
@@ -228,9 +211,9 @@ function Firstpage() {
             </div>
           </div>
 
-          {/* PRODUCTS GRID */}
+          {/* PRODUCTS */}
           <div className="overflow-y-auto px-4 pb-20 bg-[#0f1220] hide-scrollbar">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-20 pt-24">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-20 pt-24">
               {filteredProducts.map((p) => {
                 const selectedSize = size[p.id] || p.sizes[0];
                 const price = p.prices[selectedSize];
@@ -244,45 +227,17 @@ function Firstpage() {
                     <img
                       src={p.image}
                       alt={p.name}
-                      className={`absolute -top-10 left-1/2 -translate-x-1/2 shadow-xl
-                        ${
-                          selectedSize === "S"
-                            ? "w-24 h-24"
-                            : selectedSize === "M"
-                            ? "w-28 h-28"
-                            : "w-32 h-32"
-                        }
-                        rounded-full object-cover`}
+                      className="absolute -top-10 left-1/2 -translate-x-1/2
+                        w-28 h-28 rounded-full object-cover shadow-xl"
                     />
 
                     <h3 className="text-sm font-medium mb-1">{p.name}</h3>
-
                     <p className="text-green-400 font-semibold mb-1">
                       {price} AED
                     </p>
-
                     <p className="text-[#8b90b5] text-xs mb-4">
                       {p.stock} Bowls available
                     </p>
-
-                    <div className="flex justify-center gap-2 mb-4">
-                      {p.sizes.map((s) => (
-                        <button
-                          key={s}
-                          onClick={() =>
-                            setSize((prev) => ({ ...prev, [p.id]: s }))
-                          }
-                          className={`w-8 h-8 rounded-md text-xs transition
-                            ${
-                              selectedSize === s
-                                ? "bg-orange-500 text-white"
-                                : "bg-[#1d2240] text-[#8b90b5] hover:bg-[#23284a]"
-                            }`}
-                        >
-                          {s}
-                        </button>
-                      ))}
-                    </div>
 
                     <button
                       disabled={isInCart(p.id, selectedSize)}
@@ -315,29 +270,23 @@ function Firstpage() {
         </div>
       </div>
 
-      {/* ================= ORDER PANEL ================= */}
+      {/* ORDER PANEL */}
       {showOrder && (
         <>
           <div className="fixed inset-0 bg-black/60 z-[998] md:hidden" />
-
           <div
             ref={orderRef}
             className={`fixed top-0 right-0 h-screen z-[999]
-              w-full md:w-[30%]
+              w-full sm:w-[60%] md:w-[40%] lg:w-[30%]
               bg-[#14182b] border-l border-[#23284a]
-              transform transition-all duration-300 ease-in-out
+              transform transition-all duration-300
               ${
                 orderAnimating
                   ? "translate-x-0 opacity-100"
                   : "translate-x-full opacity-0"
               }`}
           >
-            <Order
-              orders={orders}
-              setOrders={setOrders}
-              onOrderSuccess={handleOrderSuccess}
-            />
-
+            <Order orders={orders} setOrders={setOrders} />
             <button
               onClick={closeOrder}
               className="absolute top-4 right-4 text-white text-xl"
