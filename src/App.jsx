@@ -5,9 +5,6 @@ import Firstpage from "./Components/Firstpage.jsx";
 import Dashboard from "./Admin/Dashboard.jsx";
 
 function App() {
-//   useEffect(() => {
-//   localStorage.clear();
-// }, []);
   return (
     <Routes>
       <Route path="/" element={<Home />} />

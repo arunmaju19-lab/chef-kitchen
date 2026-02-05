@@ -1,40 +1,35 @@
 import React from "react";
-
 function BottomBar() {
   return (
-    <div className="flex items-center justify-between px-4 py-3  bg-white">
+    <div className="flex items-center justify-between px-6 py-3
+                    bg-[#1f1d2b] border-t border-[#2a2f42] text-white">
 
-      {/* Left text */}
-      <p className="text-sm text-gray-600">
-        Showing <span className="font-medium">1</span> to{" "}
-        <span className="font-medium">10</span> of{" "}
-        <span className="font-medium">50</span> entries
+      <p className="text-sm text-gray-400">
+        Showing <span className="text-white">1</span> to{" "}
+        <span className="text-white">10</span> of{" "}
+        <span className="text-white">50</span> entries
       </p>
 
-      {/* Pagination */}
-      <div className="flex items-center gap-1">
-        <button className="px-3 py-1 border rounded text-sm hover:bg-gray-100">
+      <div className="flex items-center gap-2">
+        <button className="px-3 py-1 rounded bg-[#2a2f42] text-sm hover:bg-orange-500">
           Prev
         </button>
 
-        <button className="px-3 py-1 border rounded bg-gray-900 text-white text-sm">
+        <button className="px-3 py-1 rounded bg-orange-500 text-sm">
           1
         </button>
 
-        <button className="px-3 py-1 border rounded text-sm hover:bg-gray-100">
+        <button className="px-3 py-1 rounded bg-[#2a2f42] text-sm hover:bg-orange-500">
           2
         </button>
 
-        <button className="px-3 py-1 border rounded text-sm hover:bg-gray-100">
-          3
-        </button>
-
-        <button className="px-3 py-1 border rounded text-sm hover:bg-gray-100">
+        <button className="px-3 py-1 rounded bg-[#2a2f42] text-sm hover:bg-orange-500">
           Next
         </button>
       </div>
     </div>
   );
 }
+
 
 export default BottomBar;

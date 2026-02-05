@@ -28,15 +28,15 @@ function Sidebar() {
               {active === index && (
                 <>
                   <div
-                    className="absolute inset-y-0 right-0 bg-[#1b2032] z-10 rounded-l-[10px]"
+                    className="absolute inset-y-0 right-0 bg-[#0f1220] z-10 rounded-l-[10px]"
                     style={{ width: "calc(100% - 16px)" }}
                   />
 
                   <span className="absolute -top-[26px] right-0 w-[26px] h-[26px] bg-[#0e0e17] rounded-br-[26px] z-20" />
-                  <span className="absolute -top-[26px] right-0 w-[26px] h-[26px] bg-[#1b2032] z-10" />
+                  <span className="absolute -top-[26px] right-0 w-[26px] h-[26px] bg-[#0f1220] z-10" />
 
                   <span className="absolute -bottom-[26px] right-0 w-[26px] h-[26px] bg-[#0e0e17] rounded-tr-[26px] z-20" />
-                  <span className="absolute -bottom-[26px] right-0 w-[26px] h-[26px] bg-[#1b2032] z-10" />
+                  <span className="absolute -bottom-[26px] right-0 w-[26px] h-[26px] bg-[#0f1220]  z-10" />
                 </>
               )}
 

@@ -17,7 +17,7 @@ function Home() {
       <div className="flex flex-col items-center text-center  px-6 ">
         
         {/* Image Section */}
-        <div className="relative w-[260px]">
+        <div className="relative w-[360px]">
           <img src={img} alt="" className="w-full" />
 
           <img
