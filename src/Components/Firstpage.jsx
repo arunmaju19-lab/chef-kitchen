@@ -102,64 +102,71 @@ function Firstpage() {
 
         <div className="flex-1 flex flex-col">
           {/* HEADER */}
+          {/* ================= HEADER ================= */}
           <div className="p-4 sticky top-0 z-20 bg-[#0f1220]">
 
-            {/* TITLE + CART */}
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <h1 className="text-2xl font-bold">Chef Kitchen</h1>
-                <p className="text-sm text-[#8b90b5]">
-                  {currentDateTime.toLocaleDateString("en-IN", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
+            {/* TITLE */}
+            <div className="mb-3">
+              <h1 className="text-2xl font-bold">Chef Kitchen</h1>
+              <p className="text-sm text-[#8b90b5]">
+                {currentDateTime.toLocaleDateString("en-IN", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+
+            {/* SEARCH + CART (RIGHT SIDE, BELOW TITLE) */}
+            <div className="flex justify-end items-center gap-3 mb-6">
+
+              {/* SEARCH */}
+              <div className="relative w-full sm:w-72">
+                <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8b90b5]" />
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search food..."
+                  className="
+          bg-[#1d2240] rounded-xl pl-9 pr-4 py-2 text-sm
+          text-white placeholder-[#8b90b5]
+          w-full
+        "
+                />
               </div>
 
+              {/* CART */}
               <button
                 onClick={() => totalItems > 0 && openOrder()}
                 className={`relative w-10 h-10 rounded-full flex items-center justify-center
-                  ${
-                    totalItems === 0
-                      ? "bg-[#1d2240] text-[#8b90b5]"
-                      : "bg-orange-500 text-white"
+        ${totalItems === 0
+                    ? "bg-[#1d2240] text-[#8b90b5]"
+                    : "bg-orange-500 text-white"
                   }`}
               >
                 <FaShoppingCart />
                 {totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-xs
-                    w-4 h-4 rounded-full flex items-center justify-center">
+          w-4 h-4 rounded-full flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}
               </button>
-            </div>
 
-            {/* SEARCH */}
-            <div className="relative w-full mb-6">
-              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8b90b5]" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search food..."
-                className="bg-[#1d2240] rounded-xl pl-9 pr-4 py-2 text-sm
-                           text-white placeholder-[#8b90b5] w-full"
-              />
             </div>
 
             {/* TABS */}
-            <div className="flex gap-8 border-b border-[#23284a] mb-6 overflow-x-auto hide-scrollbar whitespace-nowrap">
+            <div className="flex gap-8 border-b border-[#23284a] mb-6
+                  overflow-x-auto hide-scrollbar whitespace-nowrap">
               {tabs.map((t) => (
                 <button
                   key={t.id}
                   onClick={() => setActiveTab(t.id)}
-                  className={`pb-3 relative transition ${
-                    activeTab === t.id
+                  className={`pb-3 relative transition ${activeTab === t.id
                       ? "text-orange-500"
                       : "text-[#8b90b5] hover:text-white"
-                  }`}
+                    }`}
                 >
                   {t.label}
                   {activeTab === t.id && (
@@ -177,20 +184,19 @@ function Firstpage() {
                 <button
                   onClick={() => setOpenType((p) => !p)}
                   className="bg-[#1d2240] border border-[#23284a]
-                    px-4 py-2 rounded-xl text-sm flex items-center gap-2"
+          px-4 py-2 rounded-xl text-sm flex items-center gap-2"
                 >
                   {orderType}
                   <FaChevronDown
-                    className={`transition-transform ${
-                      openType ? "rotate-180" : ""
-                    }`}
+                    className={`transition-transform ${openType ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
                 {openType && (
                   <div className="absolute right-0 mt-2 w-40
-                    bg-[#14182b] border border-[#23284a]
-                    rounded-xl overflow-hidden z-30">
+          bg-[#14182b] border border-[#23284a]
+          rounded-xl overflow-hidden z-30">
                     {["Dine In", "Take Away", "Delivery"]
                       .filter((t) => t !== orderType)
                       .map((type) => (
@@ -200,7 +206,8 @@ function Firstpage() {
                             setOrderType(type);
                             setOpenType(false);
                           }}
-                          className="w-full text-left px-4 py-2 text-sm hover:bg-orange-500"
+                          className="w-full text-left px-4 py-2 text-sm
+                  hover:bg-orange-500"
                         >
                           {type}
                         </button>
@@ -210,7 +217,6 @@ function Firstpage() {
               </div>
             </div>
           </div>
-
           {/* PRODUCTS */}
           <div className="overflow-y-auto px-4 pb-20 bg-[#0f1220] hide-scrollbar">
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-20 pt-24">
@@ -252,10 +258,9 @@ function Firstpage() {
                         })
                       }
                       className={`px-4 py-2 rounded-xl text-sm transition
-                        ${
-                          isInCart(p.id, selectedSize)
-                            ? "bg-red-500"
-                            : "bg-orange-500 hover:bg-orange-600"
+                        ${isInCart(p.id, selectedSize)
+                          ? "bg-red-500"
+                          : "bg-orange-500 hover:bg-orange-600"
                         }`}
                     >
                       {isInCart(p.id, selectedSize)
@@ -280,10 +285,9 @@ function Firstpage() {
               w-full sm:w-[60%] md:w-[40%] lg:w-[30%]
               bg-[#14182b] border-l border-[#23284a]
               transform transition-all duration-300
-              ${
-                orderAnimating
-                  ? "translate-x-0 opacity-100"
-                  : "translate-x-full opacity-0"
+              ${orderAnimating
+                ? "translate-x-0 opacity-100"
+                : "translate-x-full opacity-0"
               }`}
           >
             <Order orders={orders} setOrders={setOrders} />
