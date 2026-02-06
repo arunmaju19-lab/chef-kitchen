@@ -230,6 +230,8 @@ function Firstpage() {
                     className="relative bg-[#1a1f36] rounded-2xl
                       pt-24 pb-6 px-4 text-center border border-[#23284a]"
                   >
+   
+
                     <img
                       src={p.image}
                       alt={p.name}
@@ -244,6 +246,28 @@ function Firstpage() {
                     <p className="text-[#8b90b5] text-xs mb-4">
                       {p.stock} Bowls available
                     </p>
+                                     {/* SIZE SELECTOR */}
+<div className="flex justify-center gap-2 mb-3">
+  {p.sizes.map((s) => (
+    <button
+      key={s}
+      onClick={() =>
+        setSize((prev) => ({
+          ...prev,
+          [p.id]: s,
+        }))
+      }
+      className={`px-3 py-1 text-xs rounded-full border transition
+        ${
+          selectedSize === s
+            ? "bg-orange-500 border-orange-500 text-white"
+            : "bg-transparent border-[#23284a] text-[#8b90b5] hover:text-white"
+        }`}
+    >
+      {s}
+    </button>
+  ))}
+</div>
 
                     <button
                       disabled={isInCart(p.id, selectedSize)}

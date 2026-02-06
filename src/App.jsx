@@ -6,6 +6,9 @@ import Dashboard from "./Admin/Dashboard.jsx";
 import Login from "./pages/Login.jsx";
 
 function App() {
+//   useEffect(() => {
+//   localStorage.clear();
+// });
   return (
     <Routes>
       <Route path="/" element={<Home />} />
